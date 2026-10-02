@@ -109,34 +109,83 @@ body.modal-open{overflow:hidden}
 @media(max-width:480px){.store-cards{grid-template-columns:1fr}}
 
 
-/* TechAvı — navigation and live discovery pages */
-nav button.active{background:#38dca91b;color:#52e8ba;border:1px solid #38dca933;box-shadow:inset 0 0 18px #38dca90b}
-.toolbar{max-width:1200px;margin:0 auto;padding:8px 5vw 18px;position:relative}
-.toolbar>div{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.toolbar strong{font-size:22px;letter-spacing:-.2px}
-.toolbar #resultCount{font-size:12px;color:#6f8190}
-.toolbar #sectionSub{flex-basis:100%;font-size:12px;color:#718090;margin-top:-2px}
-.page-empty{min-height:330px;border:1px dashed #ffffff12;border-radius:18px;background:linear-gradient(180deg,#0b11171a,#0b11170b)}
-.page-empty .page-icon{font-size:46px;margin-bottom:12px;filter:drop-shadow(0 0 15px #39ddb033)}
-.page-empty b{font-size:20px}
-.page-empty span{display:inline-block;max-width:560px;color:#718090;line-height:1.7;margin-top:6px}
-.page-search-btn{margin-top:16px}
-.hero{padding-top:58px;padding-bottom:42px}
-.hero-copy{text-align:center;margin-inline:auto}
-.hero-copy .search-wrap{max-width:720px;margin-inline:auto;text-align:left}
-.hero-copy .search-hint{text-align:center}
-.hero h1{font-size:50px}
-.radar-card{flex:0 0 340px}
-@media(max-width:1000px){.hero-copy{text-align:center}.hero-copy .search-wrap{width:100%}.hero h1{font-size:44px}}
-@media(max-width:700px){
-  header{height:auto;min-height:70px;padding:12px 4vw;flex-wrap:wrap;gap:8px}
-  nav{order:3;flex-basis:100%;overflow:auto;padding-bottom:2px}
-  nav button{white-space:nowrap;padding:9px 10px;font-size:12px}
-  .head-actions{margin-left:auto}
-  .head-actions .ghost{display:none}
-  .head-actions .primary{padding:9px 12px}
-  .hero{padding-top:38px;padding-bottom:28px}
-  .hero h1{font-size:36px}
-  .hero p{font-size:15px}
-  .toolbar strong{font-size:19px}
-}
+/* ============================================================
+   TechAvı - REFERANS GÖRSEL TASARIMI
+   Bu bölüm yalnızca görünümü değiştirir. Uygulama mantığına dokunmaz.
+   ============================================================ */
+html,body{background:#fff!important;color:#111!important;font-family:Arial,Helvetica,sans-serif!important}
+body{min-height:100vh;overflow-x:hidden}
+.bg{display:none!important}
+header{height:78px!important;padding:0 22px!important;display:flex!important;align-items:center!important;gap:28px!important;background:#fff!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;position:relative!important}
+.logo{font-size:28px!important;font-weight:400!important;color:#111!important}
+.logo span,.logo b{display:none!important}
+nav{display:flex!important;gap:24px!important;align-items:center!important;flex:1!important}
+nav button{font-size:0!important;color:#111!important;padding:0!important;background:none!important;border:0!important;border-radius:0!important;font-weight:400!important}
+nav button[data-page="home"]::after{content:"Ana Sayfa"}
+nav button[data-page="deals"]::after{content:"Fırsatlar"}
+nav button[data-page="drops"]::after{content:"En çok Fiyatı düşenler"}
+nav button[data-page="lowest"]::after{content:"Dip Fiyatlar"}
+nav button::after{font-size:26px!important;font-weight:400!important;color:#111!important}
+.head-actions{display:flex!important;gap:25px!important;align-items:center!important}
+.head-actions .ghost{font-size:0!important;border:0!important;padding:0!important;background:none!important;color:#111!important}
+#favBtn::after{content:"Favoriler";font-size:26px}
+#alarmBtn::after{content:"Alarmlar";font-size:26px}
+#loginBtn{font-size:26px!important;font-weight:400!important;background:none!important;color:#111!important;padding:0!important;border:0!important;box-shadow:none!important;border-radius:0!important}
+#loginBtn{font-size:0!important}
+#loginBtn::after{content:"Giriş";font-size:26px}
+#favCount,#alarmCount{display:none!important}
+#installBtn{display:none!important}
+main{width:100%!important;max-width:none!important;margin:0!important}
+.hero{position:relative!important;display:block!important;max-width:none!important;margin:0!important;padding:24px 22px 0!important;text-align:center!important}
+.hero-copy{max-width:none!important;width:100%!important;margin:0 auto!important}
+.eyebrow{font-size:18px!important;letter-spacing:0!important;color:#111!important;font-weight:700!important;margin:0!important}
+.hero h1{font-size:0!important;line-height:1!important;margin:5px 0 9px!important;font-weight:400!important}
+.hero h1::after{content:"İndirimleri sen arama,\A TechAvı bulsun.";white-space:pre;font-size:20px!important;line-height:1.28!important;font-weight:400!important;color:#111!important}
+.hero p{font-size:17px!important;line-height:1.35!important;color:#111!important;margin:0!important}
+.hero .search-hint{display:none!important}
+.radar-card{display:none!important}
+.hero::after{content:"Hareketli Radar şimdi taarım\A ile aynı değiştirme";white-space:pre;position:absolute;right:55px;top:5px;width:315px;text-align:center;font-size:27px;line-height:1.3;color:#111;font-weight:400}
+.search-wrap{max-width:none!important;width:100%!important;margin:35px auto 0!important;position:relative!important}
+.search{height:54px!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;display:flex!important;justify-content:center!important;align-items:center!important}
+.search span,.search input,.search kbd{display:none!important}
+.search::before{content:"Search kutusu";font-size:28px;font-weight:400;color:#111}
+.suggestions{display:none!important}
+.store-cards{padding:32px 22px 0!important;display:grid!important;grid-template-columns:1fr!important;gap:0!important;max-width:none!important}
+.store-card{min-height:56px!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important;display:grid!important;grid-template-columns:145px 1fr!important;column-gap:0!important;align-items:center!important;text-align:left!important;box-shadow:none!important;transform:none!important;color:#111!important}
+.store-card:hover,.store-card.active{background:transparent!important;border:0!important;transform:none!important}
+.store-dot{width:auto!important;height:auto!important;border-radius:0!important;box-shadow:none!important;background:none!important;color:#111!important}
+.store-dot::after{content:"mağaza";font-size:27px;color:#111}
+.store-card strong{font-size:0!important;font-weight:400!important;color:#111!important}
+.store-card small{grid-column:2!important;margin:0!important;font-size:27px!important;line-height:1!important;color:#111!important;font-weight:400!important}
+.store-card small::before{content:"“ürün” Sonuçları";font-size:27px;color:#111}
+.store-card small{color:transparent!important}
+.store-card small::before{color:#111!important}
+.store-cards .store-card:not(:first-child) small::before{content:""}
+.store-cards .store-card:nth-child(n+8){display:none!important}
+.store-cards::after{content:"+19";display:block;font-size:27px;color:#111;margin:7px 0 0 15px}
+.toolbar{display:none!important}
+#apiUsage{display:block!important;margin:172px auto 0!important;padding:0!important;border:0!important;background:transparent!important;color:#111!important;font-size:13px!important;line-height:1.35!important;text-align:center!important;max-width:720px!important}
+.api-usage-title{color:#111!important;font-weight:700!important}
+.api-usage-items{justify-content:center!important;gap:0!important}
+.api-usage-items span{background:transparent!important;padding:0!important}
+.api-usage-total{color:#111!important;opacity:1!important}
+#grid{display:none!important}
+.dashboard{margin:34px auto 0!important;padding:0!important;max-width:700px!important;text-align:center!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.dash-title{display:block!important}
+.dash-title>span{display:none!important}
+.dash-title b{font-size:20px!important;color:#111!important;font-weight:400!important}
+.dash-title small{display:block!important;font-size:16px!important;color:#111!important;margin-top:4px!important}
+.dash-cards{display:block!important;margin-top:5px!important}
+.dash{display:block!important;background:transparent!important;border:0!important;padding:0!important;margin:2px 0!important;color:#111!important}
+.dash span{display:none!important}
+.dash b{font-size:16px!important;color:#111!important;font-weight:400!important}
+.dash small{font-size:16px!important;color:#111!important}
+.cta{margin:34px auto 0!important;padding:0 22px 60px!important;max-width:900px!important;display:block!important;text-align:center!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.cta .eyebrow{font-size:22px!important;font-weight:700!important}
+.cta h2{font-size:28px!important;font-weight:400!important;margin:7px 0!important;color:#111!important}
+.cta p{font-size:22px!important;margin:0 0 13px!important;color:#111!important}
+.cta button{font-size:22px!important;background:none!important;color:#111!important;padding:0!important;border:0!important;box-shadow:none!important;font-weight:700!important}
+.modal-box{background:#fff!important;color:#111!important}
+#toast{color:#111!important}
+@media(max-width:1000px){.hero::after{position:static!important;display:block!important;margin:8px auto 0!important;width:auto!important;font-size:22px!important}.hero{padding-top:18px!important}.store-cards{padding-top:20px!important}.head-actions{gap:12px!important}nav{gap:12px!important}nav button::after,.head-actions .ghost::after,#loginBtn::after{font-size:19px!important}}
+@media(max-width:700px){header{height:auto!important;min-height:64px!important;flex-wrap:wrap!important;padding:12px 16px!important}.logo{font-size:23px!important}nav{order:3;width:100%!important;overflow:auto!important;justify-content:flex-start!important;padding-bottom:2px!important}nav button::after{font-size:16px!important;white-space:nowrap!important}.head-actions{margin-left:auto!important}.head-actions .ghost::after,#loginBtn::after{font-size:16px!important}.hero h1::after{font-size:18px!important}.hero p{font-size:15px!important}.search-wrap{margin-top:22px!important}.search::before{font-size:23px!important}.store-card{grid-template-columns:105px 1fr!important;min-height:49px!important}.store-dot::after,.store-card small::before{font-size:22px!important}.store-cards::after{font-size:22px!important}.hero::after{font-size:19px!important}.api-usage{margin-top:100px!important}.cta h2{font-size:23px!important}.cta p{font-size:18px!important}}

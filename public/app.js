@@ -8,7 +8,6 @@ const state = {
   selected: null,
   query: "",
   activeStore: "all",
-  page: "home",
   searchTimer: null,
   controller: null,
   requestId: 0,
@@ -121,16 +120,22 @@ function renderStoreCounts() {
   }
 }
 
-function pageMeta(page) {
-  return ({
-    home: { icon: "⌕", title: state.query ? `"${state.query}" sonuçları` : "Ürün ara", sub: "Mağazaları karşılaştır, fiyatı gör ve ürünü yakala." },
-    deals: { icon: "🔥", title: "Fırsatlar", sub: "İndirim oranı bulunan ürünleri yüksek indirimden düşük indirime sırala." },
-    drops: { icon: "📉", title: "Fiyat Düşüşleri", sub: "Mevcut fiyatı önceki/listelenen fiyatından düşük olan ürünleri göster." },
-    lowest: { icon: "🏆", title: "Dip Fiyatlar", sub: "Arama sonuçlarındaki en düşük güncel fiyatları öne çıkar." }
-  }[page] || { icon: "⌕", title: "Ürün ara", sub: "" });
-}
+function render() {
+  let items = state.allProducts.slice();
+  if (state.activeStore !== "all") items = items.filter(p => storeKey(p.store) === state.activeStore);
 
-function bindCards() {
+  $("#resultCount").textContent = state.query ? `• ${items.length} gösterilen ürün` : "";
+  $("#sectionTitle").textContent = state.query ? `🔎 "${state.query}" sonuçları` : "🔎 Ürün ara";
+
+  if (!state.query) {
+    $("#grid").innerHTML = `<div class="empty-grid"><div><div style="font-size:38px;margin-bottom:10px">⌕</div><b>Bir ürün ara</b><br><span>Örneğin: RTX 5070, LEGO Technic Supra MK4 veya ASUS TUF</span></div></div>`;
+    return;
+  }
+
+  $("#grid").innerHTML = items.length
+    ? items.map(renderCard).join("")
+    : `<div class="empty-grid"><div><b>Sonuç bulunamadı.</b><br><span>Farklı bir ürün adı veya model deneyebilirsin.</span></div></div>`;
+
   $$(".card").forEach(card => card.addEventListener("click", e => {
     if (e.target.closest("[data-heart]")) return;
     if (e.target.closest("[data-store-link]")) return;
@@ -144,64 +149,6 @@ function bindCards() {
     saveFavs();
     render();
   }));
-}
-
-function filteredPageItems() {
-  let items = state.allProducts.slice();
-  if (state.activeStore !== "all") items = items.filter(p => storeKey(p.store) === state.activeStore);
-
-  if (state.page === "deals") {
-    return items.filter(p => discount(p) > 0).sort((a,b) => discount(b) - discount(a));
-  }
-  if (state.page === "drops") {
-    return items.filter(p => Number(p.originalPrice) > Number(p.price) && Number(p.price) > 0)
-      .sort((a,b) => (Number(b.originalPrice)-Number(b.price)) - (Number(a.originalPrice)-Number(a.price)));
-  }
-  if (state.page === "lowest") {
-    return items.filter(p => Number.isFinite(Number(p.price)) && Number(p.price) > 0)
-      .sort((a,b) => Number(a.price) - Number(b.price));
-  }
-  return items;
-}
-
-function render() {
-  const meta = pageMeta(state.page);
-  const items = filteredPageItems();
-  const needsSearch = !state.query && state.page !== "home";
-
-  $("#resultCount").textContent = items.length ? `• ${items.length} ürün` : "";
-  $("#sectionTitle").textContent = `${meta.icon} ${meta.title}`;
-  $("#sectionSub").textContent = meta.sub;
-
-  if (needsSearch) {
-    $("#grid").innerHTML = `<div class="empty-grid page-empty"><div><div class="page-icon">${meta.icon}</div><b>${meta.title}</b><br><span>Önce bir ürün ara; bu bölüm son arama sonuçlarını akıllı şekilde sıralar.</span><br><button class="primary page-search-btn" type="button">Ürün aramaya git</button></div></div>`;
-    const b=$(".page-search-btn"); if(b) b.onclick=()=>{ state.page="home"; updateNav(); render(); $("#search").focus(); window.scrollTo({top:0,behavior:"smooth"}); };
-    return;
-  }
-
-  if (!state.query) {
-    $("#grid").innerHTML = `<div class="empty-grid"><div><div style="font-size:38px;margin-bottom:10px">⌕</div><b>Bir ürün ara</b><br><span>Örneğin: RTX 5070, LEGO Technic Supra MK4 veya ASUS TUF</span></div></div>`;
-    return;
-  }
-
-  $("#grid").innerHTML = items.length
-    ? items.map(renderCard).join("")
-    : `<div class="empty-grid"><div><b>${meta.title} için sonuç yok.</b><br><span>Başka bir ürün ara veya farklı bir mağaza seç.</span></div></div>`;
-  bindCards();
-}
-
-function updateNav() {
-  $$('[data-page]').forEach(b => b.classList.toggle("active", b.dataset.page === state.page));
-}
-
-function setPage(page) {
-  state.page = page;
-  state.activeStore = "all";
-  $$(".store-card").forEach(b => b.classList.remove("active"));
-  updateNav();
-  render();
-  const target = $("#grid");
-  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function renderApiUsage(usage) {
@@ -243,7 +190,6 @@ function showLoading(q) {
 async function searchProducts(q) {
   const clean = q.trim();
   state.query = clean;
-  state.page = "home";
   state.activeStore = "all";
 
   if (state.controller) state.controller.abort();
@@ -552,12 +498,11 @@ function init() {
   $(".close").onclick = closeModal;
   $("#modal").onclick = e => { if (e.target.id === "modal") closeModal(); };
   $$(".store-card").forEach(b => b.onclick = () => setStoreFilter(b.dataset.store));
-  $$("[data-page]").forEach(b => b.onclick = () => setPage(b.dataset.page));
+  $$("[data-page]").forEach(b => b.onclick = () => toast("Bu bölüm canlı arama altyapısı hazır olduğunda doldurulacak."));
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") closeModal();
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#search").focus(); }
   });
-  updateNav();
   render();
 }
 
